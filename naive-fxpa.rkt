@@ -10,9 +10,13 @@
  get-total-bw
  get-fb-bw
  get-ib-bw
+ get-total-bits
+ get-frac-bits
  bits->ufp
  bits->sfp
  get-fp-value
+ get-fp-value-int
+ get-fp-sign
  fp+
  fp-
  fp*
@@ -21,7 +25,15 @@
  fp<=
  fp>
  fp>=
- fp=)
+ fp=
+ ST
+ WP
+ RU
+ RD
+ ST?
+ WP?
+ RU?
+ RD?)
 
 (define-type Signature (Pairof Positive-Integer Natural))
 
@@ -33,9 +45,21 @@
 (define (get-total-bw sig)
   (car sig))
 
+(: get-total-bits (-> FixedPoint Positive-Integer))
+(define (get-total-bits fb)
+  (get-total-bw (FixedPoint-sig fb)))
+
+(: get-frac-bits (-> FixedPoint Natural))
+(define (get-frac-bits fb)
+  (get-fb-bw (FixedPoint-sig fb)))
+
 (: get-fb-bw (-> Signature Natural))
 (define (get-fb-bw sig)
   (cdr sig))
+
+(: get-fp-sign (-> FixedPoint Boolean))
+(define (get-fp-sign fp)
+  (SFixedPoint? fp))
 
 (: get-ib-bw (-> Signature Natural))
 (define (get-ib-bw sig)
@@ -89,6 +113,13 @@
   (cond
     [(UFixedPoint? fp) (/ (UFixedPoint-bits fp) dem)]
     [(SFixedPoint? fp) (/ (SFixedPoint-bits fp) dem)]
+    [else (error "typed racket makes me do so!")]))
+
+(: get-fp-value-int (-> FixedPoint Integer))
+(define (get-fp-value-int fp)
+  (cond
+    [(UFixedPoint? fp) (UFixedPoint-bits fp)]
+    [(SFixedPoint? fp) (SFixedPoint-bits fp)]
     [else (error "typed racket makes me do so!")]))
 
 ;; rounding mode
