@@ -33,7 +33,8 @@
  ST?
  WP?
  RU?
- RD?)
+ RD?
+ FixedPoint?)
 
 (define-type Signature (Pairof Positive-Integer Natural))
 
